@@ -171,9 +171,9 @@ public class GUI2 extends javax.swing.JFrame {
         if (codigo.length() == 10) {
             //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
             TorniqueteDAO dao = new TorniqueteDAO();
-            String torniquete_id="1";
+//          String torniquete_id="1";
 //          String event_id="1";
-            int resultado = dao.validarTarjeta(codigo,torniquete_id);
+            int resultado = dao.validarTarjeta(codigo); //,torniquete_id
             switch (resultado) {
                 case 0:
                 communicator.bloqueaDesbloquea(estado);

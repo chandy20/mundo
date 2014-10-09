@@ -183,59 +183,60 @@ public class Communicator implements SerialPortEventListener {
     }
 
     private void finalizarLlegada() {
+        int torniquete_id = 1;
         TorniqueteDAO dao = new TorniqueteDAO();
-        boolean verif = dao.registrarActualizar(1);
-        boolean verifHora = dao.registrarActualizarHora(1);
-        boolean verifDia = dao.registrarActualizarDia(1);
-        boolean verifMes = dao.registrarActualizarMes(1);
-        boolean verifAnio = dao.registrarActualizarAnio(1);
+        boolean verif = dao.registrarActualizar(torniquete_id);
+        boolean verifHora = dao.registrarActualizarHora(torniquete_id);
+        boolean verifDia = dao.registrarActualizarDia(torniquete_id);
+        boolean verifMes = dao.registrarActualizarMes(torniquete_id);
+        boolean verifAnio = dao.registrarActualizarAnio(torniquete_id);
         boolean verifTodosDia = dao.registrarActualizarTodosDia();
         if(entrada.indexOf("S011000000000E") != -1) {
             if (verif)
-                dao.contarSalida(1,GUI2.Fecha);
+                dao.contarSalida(torniquete_id,GUI2.Fecha);
             else
-                dao.salida(1,GUI2.Fecha);
+                dao.salida(torniquete_id,GUI2.Fecha);
             if (verifHora)
-                dao.contarSalidaHora(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
+                dao.contarSalidaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
             else
-                dao.salidaHora(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
+                dao.salidaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
             if (verifDia)
-                dao.contarSalidaDia(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
+                dao.contarSalidaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             else
-                dao.salidaDia(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
+                dao.salidaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             if (verifMes)
-                dao.contarSalidaMes(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
+                dao.contarSalidaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
             else
-                dao.salidaMes(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
+                dao.salidaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
             if (verifAnio)
-                dao.contarSalidaAnio(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
+                dao.contarSalidaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
             else
-                dao.salidaAnio(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
+                dao.salidaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
             if (verifTodosDia)
                 dao.contarSalidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             else
                 dao.salidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
         } else if(entrada.indexOf("S010000000000E") != -1) {
             if (verif)
-                dao.contarEntrada(1,GUI2.Fecha);
+                dao.contarEntrada(torniquete_id,GUI2.Fecha);
             else
-                dao.entrada(1,GUI2.Fecha);
+                dao.entrada(torniquete_id,GUI2.Fecha);
             if (verifHora)
-                dao.contarEntradaHora(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
+                dao.contarEntradaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
             else
-                dao.entradaHora(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
+                dao.entradaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
             if (verifDia)
-                dao.contarEntradaDia(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
+                dao.contarEntradaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             else
-                dao.entradaDia(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
+                dao.entradaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             if (verifMes)
-                dao.contarEntradaMes(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
+                dao.contarEntradaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
             else
-                dao.entradaMes(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
+                dao.entradaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
             if (verifAnio)
-                dao.contarEntradaAnio(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
+                dao.contarEntradaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
             else
-                dao.entradaAnio(1,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
+                dao.entradaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
             if (verifTodosDia)
                 dao.contarEntradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
             else

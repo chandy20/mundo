@@ -250,7 +250,7 @@ public class TorniqueteDAO {
      * 1 si no se encuentra en el sistema
      * -1 si hay un error en la consulta
      */
-    public int validarTarjeta(String codigo, String torniquete_id) {
+    public int validarTarjeta(String codigo) { //, String torniquete_id
         String sql = "SELECT id FROM bracelets WHERE cod_barras = " + codigo;
 //      Hashtable<String, String> datos = new Hashtable<String, String>();
         int retornar = -1;
