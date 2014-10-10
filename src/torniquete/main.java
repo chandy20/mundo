@@ -20,10 +20,6 @@ public class main {
     public static void main(String[] args) throws AWTException {
         // TODO code application logic here
         GUI2 g = new GUI2();
-//        Toolkit tk = Toolkit.getDefaultToolkit();
-//        int xSize = ((int) tk.getScreenSize().getWidth());
-//        int ySize = ((int) tk.getScreenSize().getHeight());
-//        g.setSize(xSize, ySize);
         g.setVisible(true);
         g.communicator.connect();
         if (g.communicator.getConnected() == true) {

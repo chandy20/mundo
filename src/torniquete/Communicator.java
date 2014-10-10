@@ -43,6 +43,7 @@ public class Communicator implements SerialPortEventListener {
     final static int DASH_ASCII = 45;
     final static int NEW_LINE_ASCII = 10;
     String logText = "";
+    
     public Communicator(GUI2 window) {
         this.window = window;
     }
@@ -168,9 +169,6 @@ public class Communicator implements SerialPortEventListener {
     //post: data sent to the other device
     public void writeData(int leftThrottle, int rightThrottle,String mensaje) {
         try {
-//            System.out.println("Escribiendo");
-//            String EN = "S006000000E20";
-//            System.out.println("Mensaje: "+mensaje);
             for (int i = 0; i < mensaje.length(); i++) {
                 char c = mensaje.charAt(i);
                 int ascii = (int) c;
@@ -254,6 +252,7 @@ public class Communicator implements SerialPortEventListener {
         else
             mensaje="S016000000E21";
         writeData(TIMEOUT, TIMEOUT, mensaje);
+        System.out.println("Enviado: " + mensaje);
     }
     
     public void getcounter() {
