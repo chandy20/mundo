@@ -31,6 +31,8 @@ public class main {
                 g.txtCodigo.requestFocus();
             }
         }
+        SocketServidor sv = new SocketServidor();
+        sv.Escuchar();
     }
 
 }
