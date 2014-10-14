@@ -9,9 +9,12 @@ package torniquete;
  *
  * @author Developer
  */
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,8 +30,9 @@ public class GUI2 extends javax.swing.JFrame {
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
     Communicator communicator = null;
-    //KeybindingController object
     KeybindingController keybindingController = null;
+    ServerSocket serverAddr = null;
+    Socket sc = null;
 
     public GUI2() {
         initComponents();
@@ -46,6 +50,36 @@ public class GUI2 extends javax.swing.JFrame {
         communicator = new Communicator(this);
         keybindingController = new KeybindingController(this);
     }
+    
+    public void Escuchar() {
+        try {
+            serverAddr = new ServerSocket(2500);
+        } catch (Exception e) {
+            System.err.println("Error creando socket");
+        }
+        while (true) {
+            
+              try {
+                sc = serverAddr.accept(); // esperando conexión
+                InputStream istream = sc.getInputStream();
+                ObjectInput in = new ObjectInputStream(istream);
+                int Estado = (int) in.readObject();
+                Thread.sleep(2000);
+                DataOutputStream ostream = new DataOutputStream(sc.getOutputStream());
+                if (Estado == -1) {
+                    ostream.writeInt(estado);
+                } else {
+                    communicator.bloqueaDesbloquea(Estado);
+                    ostream.writeInt(estado);
+                }
+                ostream.flush();
+                sc.close();
+            } catch (Exception e) {
+                System.err.println("excepcion " + e.toString());
+                e.printStackTrace();
+            } // try
+        } // while
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,8 +92,6 @@ public class GUI2 extends javax.swing.JFrame {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         cboxPorts = new java.awt.Choice();
-        btnDisconnect = new java.awt.Button();
-        btnConnect = new java.awt.Button();
         lblLogo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtCodigo = new java.awt.TextField();
@@ -69,25 +101,6 @@ public class GUI2 extends javax.swing.JFrame {
 
         jLayeredPane1.setBackground(new java.awt.Color(255, 255, 255));
         jLayeredPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        btnDisconnect.setLabel("Desconectar");
-        btnDisconnect.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDisconnectMouseClicked(evt);
-            }
-        });
-
-        btnConnect.setLabel("Conectar");
-        btnConnect.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnConnectMouseClicked(evt);
-            }
-        });
-        btnConnect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConnectActionPerformed(evt);
-            }
-        });
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png"))); // NOI18N
 
@@ -111,41 +124,32 @@ public class GUI2 extends javax.swing.JFrame {
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addContainerGap()
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(txtCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(lblLogo)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(cboxPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
-                        .addComponent(btnDisconnect, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cboxPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDisconnect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboxPorts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(4, 4, 4)
-                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogo)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jLayeredPane1.setLayer(cboxPorts, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(btnDisconnect, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(btnConnect, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(lblLogo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(txtCodigo, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -158,7 +162,9 @@ public class GUI2 extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
         pack();
@@ -205,28 +211,6 @@ public class GUI2 extends javax.swing.JFrame {
         System.out.println("Cambiando texto");
     }//GEN-LAST:event_txtCodigoInputMethodTextChanged
 
-    private void btnConnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConnectMouseClicked
-        // TODO add your handling code here:
-        communicator.connect();
-        if (communicator.getConnected() == true) {
-            if (communicator.initIOStream() == true) {
-                communicator.initListener();
-                btnConnect.setVisible(false);
-                btnDisconnect.setVisible(false);
-                cboxPorts.setVisible(false);
-                txtCodigo.requestFocus();
-            }
-        }
-    }//GEN-LAST:event_btnConnectMouseClicked
-
-    private void btnDisconnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDisconnectMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDisconnectMouseClicked
-
-    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnConnectActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -263,8 +247,6 @@ public class GUI2 extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public java.awt.Button btnConnect;
-    public java.awt.Button btnDisconnect;
     java.awt.Choice cboxPorts;
     public javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;

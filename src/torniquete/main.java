@@ -25,14 +25,11 @@ public class main {
         if (g.communicator.getConnected() == true) {
             if (g.communicator.initIOStream() == true) {
                 g.communicator.initListener();
-                g.btnConnect.setVisible(false);
-                g.btnDisconnect.setVisible(false);
                 g.cboxPorts.setVisible(false);
                 g.txtCodigo.requestFocus();
+                g.Escuchar();
             }
         }
-        SocketServidor sv = new SocketServidor();
-        sv.Escuchar();
     }
 
 }

@@ -71,24 +71,10 @@ public class KeybindingController {
     {
         if (window.communicator.getConnected() == true)
         {
-//            window.btnLeftAccel.setEnabled(true);
-//            window.btnLeftDecel.setEnabled(true);
-//            window.btnRightAccel.setEnabled(true);
-//            window.btnRightDecel.setEnabled(true);
-
-            window.btnDisconnect.setEnabled(true);
-            window.btnConnect.setEnabled(false);
             window.cboxPorts.setEnabled(false);
         }
         else
         {
-//            window.btnLeftAccel.setEnabled(false);
-//            window.btnLeftDecel.setEnabled(false);
-//            window.btnRightAccel.setEnabled(false);
-//            window.btnRightDecel.setEnabled(false);
-
-            window.btnDisconnect.setEnabled(false);
-            window.btnConnect.setEnabled(true);
             window.cboxPorts.setEnabled(true);
         }
     }

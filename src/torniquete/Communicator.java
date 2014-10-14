@@ -246,6 +246,7 @@ public class Communicator implements SerialPortEventListener {
     }
     
     public void bloqueaDesbloquea(int est) {
+        System.out.println("derf " + est);
         String mensaje;
         if (est == 0)
             mensaje="S015000000E22";

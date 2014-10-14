@@ -18,7 +18,8 @@ public class SocketServidor {
     ServerSocket serverAddr = null;
     Socket sc = null;
     
-    Communicator communicator = null;
+    GUI2 g = null;
+    Communicator communicator = new Communicator(g);
     
     /**
      * @param args the command line arguments
@@ -30,16 +31,20 @@ public class SocketServidor {
             System.err.println("Error creando socket");
         }
         while (true) {
-            try {
+            
+              try {
                 sc = serverAddr.accept(); // esperando conexión
                 InputStream istream = sc.getInputStream();
                 ObjectInput in = new ObjectInputStream(istream);
                 int Estado = (int) in.readObject();
-                communicator.bloqueaDesbloquea(Estado);
-                System.out.println("conexión");
                 Thread.sleep(2000);
                 DataOutputStream ostream = new DataOutputStream(sc.getOutputStream());
-                ostream.writeChars("Torniquete bloqueado");
+                if (Estado == -1) {
+                    ostream.writeInt(g.estado);
+                } else {
+                    g.communicator.bloqueaDesbloquea(Estado);
+                    ostream.writeInt(g.estado);
+                }
                 ostream.flush();
                 sc.close();
             } catch (Exception e) {
