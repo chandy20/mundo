@@ -58,7 +58,6 @@ public class GUI2 extends javax.swing.JFrame {
             System.err.println("Error creando socket");
         }
         while (true) {
-            
               try {
                 sc = serverAddr.accept(); // esperando conexión
                 InputStream istream = sc.getInputStream();
@@ -66,12 +65,18 @@ public class GUI2 extends javax.swing.JFrame {
                 int Estado = (int) in.readObject();
                 Thread.sleep(2000);
                 DataOutputStream ostream = new DataOutputStream(sc.getOutputStream());
-                if (Estado == -1) {
-                    ostream.writeInt(estado);
-                } else {
+                if (Estado != -1) {
                     communicator.bloqueaDesbloquea(Estado);
-                    ostream.writeInt(estado);
+                    if (estado == 0) {
+                        estado = 1;
+                        jLabel1.setText("Torniquete desbloqueado");
+                    }
+                    if (estado == 1) {
+                        estado = 0;
+                        jLabel1.setText("Torniquete bloqueado");
+                    }
                 }
+                ostream.writeInt(estado);
                 ostream.flush();
                 sc.close();
             } catch (Exception e) {
@@ -177,8 +182,6 @@ public class GUI2 extends javax.swing.JFrame {
         if (codigo.length() == 10) {
             //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
             TorniqueteDAO dao = new TorniqueteDAO();
-//          String torniquete_id="1";
-//          String event_id="1";
             int resultado = dao.validarTarjeta(codigo); //,torniquete_id
             switch (resultado) {
                 case 0:
@@ -186,7 +189,8 @@ public class GUI2 extends javax.swing.JFrame {
                 if (estado == 0) {
                     estado = 1;
                     jLabel1.setText("Torniquete desbloqueado");
-                } else {
+                }
+                if (estado == 1) {
                     estado = 0;
                     jLabel1.setText("Torniquete bloqueado");
                 }
