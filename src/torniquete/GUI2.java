@@ -70,8 +70,7 @@ public class GUI2 extends javax.swing.JFrame {
                     if (estado == 0) {
                         estado = 1;
                         jLabel1.setText("Torniquete desbloqueado");
-                    }
-                    if (estado == 1) {
+                    } else {
                         estado = 0;
                         jLabel1.setText("Torniquete bloqueado");
                     }
@@ -109,7 +108,9 @@ public class GUI2 extends javax.swing.JFrame {
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png"))); // NOI18N
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Bienvenido");
 
         txtCodigo.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
@@ -189,8 +190,7 @@ public class GUI2 extends javax.swing.JFrame {
                 if (estado == 0) {
                     estado = 1;
                     jLabel1.setText("Torniquete desbloqueado");
-                }
-                if (estado == 1) {
+                } else {
                     estado = 0;
                     jLabel1.setText("Torniquete bloqueado");
                 }
