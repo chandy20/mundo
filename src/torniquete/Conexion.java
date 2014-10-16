@@ -19,9 +19,12 @@ public class Conexion
 		
 		try
 		{
-			String uname = "enovasoft";
-			String pwd = "enovasoft";
-			String servidor = "jdbc:mysql://192.168.0.23/aventura";
+//			String uname = "enovasoft";
+//			String pwd = "enovasoft";
+//			String servidor = "jdbc:mysql://192.168.0.23/aventura";
+			String uname = "root";
+			String pwd = "";
+			String servidor = "jdbc:mysql://localhost/aventura";
 
 //			String uname = "tiquetes";
 //			String pwd = "tiquetes2";

@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -20,9 +21,11 @@ public class Communicator implements SerialPortEventListener {
     //passed from main GUI
     GUI2 window = null;
 
+    TorniqueteDAO dao = new TorniqueteDAO();
+
     //for containing the ports that will be found
     private Enumeration ports = null;
-    
+
     //map the port names to CommPortIdentifiers
     private HashMap portMap = new HashMap();
 
@@ -33,7 +36,7 @@ public class Communicator implements SerialPortEventListener {
     //input and output streams for sending and receiving data
     private InputStream input = null;
     private OutputStream output = null;
-    
+
     //just a boolean flag that i use for enabling
     //and disabling buttons depending on whether the program
     //is connected to a serial port or not
@@ -43,7 +46,7 @@ public class Communicator implements SerialPortEventListener {
     final static int DASH_ASCII = 45;
     final static int NEW_LINE_ASCII = 10;
     String logText = "";
-    
+
     public Communicator(GUI2 window) {
         this.window = window;
     }
@@ -56,8 +59,8 @@ public class Communicator implements SerialPortEventListener {
         while (ports.hasMoreElements()) {
             CommPortIdentifier curPort = (CommPortIdentifier) ports.nextElement();
             if (curPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-                System.out.println("curPort.getName():"+curPort.getName());
-                if(curPort.getName().isEmpty()==false) {   
+                System.out.println("curPort.getName():" + curPort.getName());
+                if (curPort.getName().isEmpty() == false) {
                     window.cboxPorts.addItem(curPort.getName());
                     portMap.put(curPort.getName(), curPort);
                 }
@@ -141,7 +144,7 @@ public class Communicator implements SerialPortEventListener {
     }
 
     String entrada = "";
-    
+
     //what happens when data is received
     //pre: serial event is triggered
     //post: processing on the data it reads
@@ -167,7 +170,7 @@ public class Communicator implements SerialPortEventListener {
     //method that can be called to send data
     //pre: open serial port
     //post: data sent to the other device
-    public void writeData(int leftThrottle, int rightThrottle,String mensaje) {
+    public void writeData(int leftThrottle, int rightThrottle, String mensaje) {
         try {
             for (int i = 0; i < mensaje.length(); i++) {
                 char c = mensaje.charAt(i);
@@ -181,86 +184,106 @@ public class Communicator implements SerialPortEventListener {
     }
 
     private void finalizarLlegada() {
-        int torniquete_id = 1;
-        TorniqueteDAO dao = new TorniqueteDAO();
-        boolean verif = dao.registrarActualizar(torniquete_id);
-        boolean verifHora = dao.registrarActualizarHora(torniquete_id);
-        boolean verifDia = dao.registrarActualizarDia(torniquete_id);
-        boolean verifMes = dao.registrarActualizarMes(torniquete_id);
-        boolean verifAnio = dao.registrarActualizarAnio(torniquete_id);
+        boolean verif = dao.registrarActualizar(window.torniquete_id);
+        boolean verifHora = dao.registrarActualizarHora(window.torniquete_id);
+        boolean verifDia = dao.registrarActualizarDia(window.torniquete_id);
+        boolean verifMes = dao.registrarActualizarMes(window.torniquete_id);
+        boolean verifAnio = dao.registrarActualizarAnio(window.torniquete_id);
         boolean verifTodosDia = dao.registrarActualizarTodosDia();
-        if(entrada.indexOf("S011000000000E") != -1) {
-            if (verif)
-                dao.contarSalida(torniquete_id,GUI2.Fecha);
-            else
-                dao.salida(torniquete_id,GUI2.Fecha);
-            if (verifHora)
-                dao.contarSalidaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
-            else
-                dao.salidaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
-            if (verifDia)
-                dao.contarSalidaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            else
-                dao.salidaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            if (verifMes)
-                dao.contarSalidaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
-            else
-                dao.salidaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
-            if (verifAnio)
-                dao.contarSalidaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
-            else
-                dao.salidaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
-            if (verifTodosDia)
-                dao.contarSalidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            else
-                dao.salidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-        } else if(entrada.indexOf("S010000000000E") != -1) {
-            if (verif)
-                dao.contarEntrada(torniquete_id,GUI2.Fecha);
-            else
-                dao.entrada(torniquete_id,GUI2.Fecha);
-            if (verifHora)
-                dao.contarEntradaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
-            else
-                dao.entradaHora(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-5) + "00");
-            if (verifDia)
-                dao.contarEntradaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            else
-                dao.entradaDia(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            if (verifMes)
-                dao.contarEntradaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
-            else
-                dao.entradaMes(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-12));
-            if (verifAnio)
-                dao.contarEntradaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
-            else
-                dao.entradaAnio(torniquete_id,GUI2.Fecha.substring(0, GUI2.Fecha.length()-15));
-            if (verifTodosDia)
-                dao.contarEntradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
-            else
-                dao.entradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length()-9));
+        if (entrada.indexOf("S011000000000E") != -1) {
+            if (verif) {
+                dao.contarSalida(window.torniquete_id, GUI2.Fecha);
+            } else {
+                dao.salida(window.torniquete_id, GUI2.Fecha);
+            }
+            if (verifHora) {
+                dao.contarSalidaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
+            } else {
+                dao.salidaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
+            }
+            if (verifDia) {
+                dao.contarSalidaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            } else {
+                dao.salidaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            }
+            if (verifMes) {
+                dao.contarSalidaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
+            } else {
+                dao.salidaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
+            }
+            if (verifAnio) {
+                dao.contarSalidaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+            } else {
+                dao.salidaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+            }
+            if (verifTodosDia) {
+                dao.contarSalidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            } else {
+                dao.salidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            }
+        } else if (entrada.indexOf("S010000000000E") != -1) {
+            if (verif) {
+                dao.contarEntrada(window.torniquete_id, GUI2.Fecha);
+            } else {
+                dao.entrada(window.torniquete_id, GUI2.Fecha);
+            }
+            if (verifHora) {
+                dao.contarEntradaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
+            } else {
+                dao.entradaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
+            }
+            if (verifDia) {
+                dao.contarEntradaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            } else {
+                dao.entradaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            }
+            if (verifMes) {
+                dao.contarEntradaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
+            } else {
+                dao.entradaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
+            }
+            if (verifAnio) {
+                dao.contarEntradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+            } else {
+                dao.entradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+            }
+            if (verifTodosDia) {
+                dao.contarEntradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            } else {
+                dao.entradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+            }
         } else {
-            System.out.println("Posible mensaje de error de retorno");
+            System.out.println(entrada);
         }
         entrada = "";
     }
-    
+
+    public void resetearContador(int torniquete_id, int reset) {
+        writeData(TIMEOUT, TIMEOUT, "S004000000E22");
+        try {
+            dao.reset(torniquete_id, reset);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void bloqueaDesbloquea(int est) {
-        System.out.println("derf " + est);
         String mensaje;
-        if (est == 0)
-            mensaje="S015000000E22";
-        else
-            mensaje="S016000000E21";
+        if (est == 0) {
+            mensaje = "S015000000E22";
+        } else {
+            mensaje = "S016000000E21";
+        }
         writeData(TIMEOUT, TIMEOUT, mensaje);
         System.out.println("Enviado: " + mensaje);
     }
-    
+
     public void getcounter() {
-//      String mensaje="S006000000E20";
-//      writeData(TIMEOUT, TIMEOUT, mensaje);
+        String mensaje = "S006000000E20";
+        writeData(TIMEOUT, TIMEOUT, mensaje);
+
     }
-    
+
     private char calcularChecksum(String str, int nLength) {
         char uRet = 0;
         for (int i = 0; i < nLength; i++) {
@@ -268,4 +291,39 @@ public class Communicator implements SerialPortEventListener {
         }
         return uRet;
     }
+
+    public void temporizador() {
+        long start = System.currentTimeMillis();
+        long aux = start;
+        while (true) {
+            long end = System.currentTimeMillis();
+            long res = end - start;
+            if (aux != end) {
+                aux = end;
+                if (res % 1000 == 0) {
+                    int estado = dao.consultarEstado(window.torniquete_id);
+                    int reset = dao.consultarReset(window.torniquete_id);
+                    if (estado == -1) {
+                        System.out.println("Error en la consulta del estado");
+                    } else if (estado == window.estado) {
+                        if (window.estado == 0) {
+                            window.estado = 1;
+                            window.jLabel1.setText("Torniquete desbloqueado");
+                        } else {
+                            window.estado = 0;
+                            window.jLabel1.setText("Torniquete bloqueado");
+                        }
+                        bloqueaDesbloquea(estado);
+                    }
+                    if (reset == -1) {
+                        System.out.println("Error en la consulta del reset");
+                    } else if (reset == 1) {
+                        resetearContador(reset, window.torniquete_id);
+                    }
+
+                }
+            }
+        }
+    }
+
 }

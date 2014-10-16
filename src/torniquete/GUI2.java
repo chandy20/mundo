@@ -18,6 +18,11 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GUI2 extends javax.swing.JFrame {
 
@@ -26,6 +31,7 @@ public class GUI2 extends javax.swing.JFrame {
      */
     //Communicator object
     static int estado = 0;
+    int torniquete_id = 1;
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
@@ -34,7 +40,7 @@ public class GUI2 extends javax.swing.JFrame {
     ServerSocket serverAddr = null;
     Socket sc = null;
 
-    public GUI2() {
+    public GUI2() {        
         initComponents();
         createObjects();
         communicator.searchForPorts();
@@ -44,13 +50,14 @@ public class GUI2 extends javax.swing.JFrame {
         if (connection != null) {
             System.out.print(connection);
         }
+        //temporizador();
     }
-
+    
     private void createObjects() {
         communicator = new Communicator(this);
         keybindingController = new KeybindingController(this);
     }
-    
+
     public void Escuchar() {
         try {
             serverAddr = new ServerSocket(2500);
@@ -58,7 +65,7 @@ public class GUI2 extends javax.swing.JFrame {
             System.err.println("Error creando socket");
         }
         while (true) {
-              try {
+            try {
                 sc = serverAddr.accept(); // esperando conexión
                 InputStream istream = sc.getInputStream();
                 ObjectInput in = new ObjectInputStream(istream);
@@ -186,28 +193,29 @@ public class GUI2 extends javax.swing.JFrame {
             int resultado = dao.validarTarjeta(codigo); //,torniquete_id
             switch (resultado) {
                 case 0:
-                communicator.bloqueaDesbloquea(estado);
-                if (estado == 0) {
-                    estado = 1;
-                    jLabel1.setText("Torniquete desbloqueado");
-                } else {
-                    estado = 0;
-                    jLabel1.setText("Torniquete bloqueado");
-                }
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                break;
+                    communicator.bloqueaDesbloquea(estado);
+                    if (estado == 0) {
+                        estado = 1;
+                        jLabel1.setText("Torniquete desbloqueado");
+                    } else {
+                        estado = 0;
+                        jLabel1.setText("Torniquete bloqueado");
+                    }
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                    break;
                 case 1:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                jLabel1.setText("No existe la tarjeta");
-                break;
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                    jLabel1.setText("No existe la tarjeta");
+                    break;
                 case -1:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
-                jLabel1.setText("Error al ejecutar la consulta");
-                break;
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
+                    jLabel1.setText("Error al ejecutar la consulta");
+                    break;
             }
             txtCodigo.setText(null);
             txtCodigo.requestFocus();
         }
+
     }//GEN-LAST:event_txtCodigoKeyPressed
 
     private void txtCodigoInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtCodigoInputMethodTextChanged
@@ -247,9 +255,11 @@ public class GUI2 extends javax.swing.JFrame {
             public void run() {
                 new GUI2().setVisible(true);
             }
-        }); 
+        });
     }
     
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     java.awt.Choice cboxPorts;
     public javax.swing.JLabel jLabel1;

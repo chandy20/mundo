@@ -23,16 +23,16 @@ public class TorniqueteDAO {
     }
 
     public void entrada(int id, String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salida(int id, String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -41,7 +41,7 @@ public class TorniqueteDAO {
     }
 
     public void contarEntrada(int id, String fecha) {
-    	fecha = fecha.substring(0, fecha.length()-2); 
+        fecha = fecha.substring(0, fecha.length() - 2);
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_minutos SET entradas = entradas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
@@ -51,7 +51,7 @@ public class TorniqueteDAO {
     }
 
     public void contarSalida(int id, String fecha) {
-        fecha = fecha.substring(0, fecha.length()-2); 
+        fecha = fecha.substring(0, fecha.length() - 2);
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_minutos SET salidas = salidas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
@@ -59,18 +59,18 @@ public class TorniqueteDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void entradaHora(int id, String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salidaHora(int id, String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -79,7 +79,7 @@ public class TorniqueteDAO {
     }
 
     public void contarEntradaHora(int id, String fecha) {
-    	fecha = fecha.substring(0, fecha.length()-2); 
+        fecha = fecha.substring(0, fecha.length() - 2);
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_horas SET entradas = entradas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
@@ -89,7 +89,7 @@ public class TorniqueteDAO {
     }
 
     public void contarSalidaHora(int id, String fecha) {
-        fecha = fecha.substring(0, fecha.length()-2); 
+        fecha = fecha.substring(0, fecha.length() - 2);
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_horas SET salidas = salidas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
@@ -97,18 +97,18 @@ public class TorniqueteDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void entradaDia(int id, String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salidaDia(int id, String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -133,18 +133,18 @@ public class TorniqueteDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void entradaMes(int id, String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salidaMes(int id, String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -169,18 +169,18 @@ public class TorniqueteDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void entradaAnio(int id, String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_anos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_anos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salidaAnio(int id, String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_anos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -205,18 +205,18 @@ public class TorniqueteDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void entradaTodosDias(String fecha) {
-   	try {	    	
+        try {
             Statement statement = connection.createStatement();
-	    statement.execute("INSERT INTO entradas_salidas_dias_parques(fecha, entradas, salidas) VALUE ('" + fecha + "',1,0)");       
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
+            statement.execute("INSERT INTO entradas_salidas_dias_parques(fecha, entradas, salidas) VALUE ('" + fecha + "',1,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void salidaTodosDias(String fecha) {
-    	try {
+        try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias_parques(fecha, entradas, salidas) VALUE ('" + fecha + "',0,1)");
         } catch (SQLException e) {
@@ -243,12 +243,12 @@ public class TorniqueteDAO {
     }
 
     /**
-     * Esta funcion se encarga de dado el codigo de la tarjeta desbloquear
-     * el torniquete
+     * Esta funcion se encarga de dado el codigo de la tarjeta desbloquear el
+     * torniquete
+     *
      * @param codigo
-     * @return 0 Si la terjeta esta registrada en la base de datos
-     * 1 si no se encuentra en el sistema
-     * -1 si hay un error en la consulta
+     * @return 0 Si la terjeta esta registrada en la base de datos 1 si no se
+     * encuentra en el sistema -1 si hay un error en la consulta
      */
     public int validarTarjeta(String codigo) { //, String torniquete_id
         String sql = "SELECT id FROM bracelets WHERE cod_barras = " + codigo;
@@ -269,15 +269,16 @@ public class TorniqueteDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    return retornar;
+        return retornar;
     }
 
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizar(int id) {
         String fecha;
@@ -286,9 +287,10 @@ public class TorniqueteDAO {
         String Fecha = Formateador.format(fecaActual) + ":00";
         if (!GUI2.Fecha.equals(Fecha)) {
             GUI2.Fecha = Fecha;
-            fecha = Fecha.substring(0, Fecha.length()-2);
-        } else
-            fecha = GUI2.Fecha.substring(0, GUI2.Fecha.length()-2);
+            fecha = Fecha.substring(0, Fecha.length() - 2);
+        } else {
+            fecha = GUI2.Fecha.substring(0, GUI2.Fecha.length() - 2);
+        }
         String sql = "SELECT id FROM entradas_salidas_minutos WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id;
 //      Hashtable<String, String> datos = new Hashtable<String, String>();
         boolean retornar = false;
@@ -306,13 +308,14 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
+
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida por hora
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizarHora(int id) {
         String fecha;
@@ -337,13 +340,14 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
+
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizarDia(int id) {
         Date fecaActual = new Date();
@@ -366,13 +370,14 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
+
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizarMes(int id) {
         Date fecaActual = new Date();
@@ -395,13 +400,14 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
+
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizarAnio(int id) {
         Date fecaActual = new Date();
@@ -424,13 +430,14 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
+
     /**
-     * Esta funcion se encarga de verificar si se va a registrar o a actualizar 
+     * Esta funcion se encarga de verificar si se va a registrar o a actualizar
      * en la base de datos en el registro de entrada salida
+     *
      * @param id
-     * @return false Si se va a crear un registro nuevo en la base de datos
-     * true si se va a actualizar
+     * @return false Si se va a crear un registro nuevo en la base de datos true
+     * si se va a actualizar
      */
     public boolean registrarActualizarTodosDia() {
         Date fecaActual = new Date();
@@ -453,8 +460,7 @@ public class TorniqueteDAO {
         }
         return retornar;
     }
-    
-    
+
     /**
      * Determina la cantidada de ingresos se han realizado con una tarjeta en
      * especifico
@@ -553,62 +559,96 @@ public class TorniqueteDAO {
         return retornar;
     }
 
-    public void registrarLog(int tipo,String torniquete_id, String input_id, Statement statement)
-    {
-        String descripcion="";
-        String type="";
-        switch(tipo)
-        {
+    public void registrarLog(int tipo, String torniquete_id, String input_id, Statement statement) {
+        String descripcion = "";
+        String type = "";
+        switch (tipo) {
             case -4:
-                descripcion="Tarjeta no pertenece al evento";
-                type="RECHAZO";
+                descripcion = "Tarjeta no pertenece al evento";
+                type = "RECHAZO";
                 break;
             case -3:
-                descripcion="La tarjeta no se encuentra en el sistema";
-                type="RECHAZO";
+                descripcion = "La tarjeta no se encuentra en el sistema";
+                type = "RECHAZO";
                 break;
             case -2:
-                descripcion="Entrada no permite esa tarjeta";
-                type="RECHAZO";
+                descripcion = "Entrada no permite esa tarjeta";
+                type = "RECHAZO";
                 break;
             case -1:
-                descripcion="Se excedio el limite de entradas";
-                type="RECHAZO";
+                descripcion = "Se excedio el limite de entradas";
+                type = "RECHAZO";
                 break;
             case 0:
-                descripcion="";
-                type="INGRESO";
+                descripcion = "";
+                type = "INGRESO";
                 break;
         }
-        String sql="insert into logs_torniquetes (torniquete_id, input_id, tipo, descripcion) values($1,$2,'$3','$4')";
-        sql=sql.replace("$1", torniquete_id);
-        sql=sql.replace("$2", input_id);
-        sql=sql.replace("$3", type);
-        sql=sql.replace("$4", descripcion);
+        String sql = "insert into logs_torniquetes (torniquete_id, input_id, tipo, descripcion) values($1,$2,'$3','$4')";
+        sql = sql.replace("$1", torniquete_id);
+        sql = sql.replace("$2", input_id);
+        sql = sql.replace("$3", type);
+        sql = sql.replace("$4", descripcion);
         try {
             statement.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
-    
-    public String obtenerUltimoIngreso(String codigo)
-    {
-        String sql="select l_t.fecha from logs_torniquetes l_t, inputs i where i.entr_codigo=$1 and i.id=l_t.input_id and l_t.tipo='INGRESO' order by l_t.fecha DESC LIMIT 1";
-        sql=sql.replace("$1", codigo);
-        System.out.println("sql: "+sql);
+
+    public String obtenerUltimoIngreso(String codigo) {
+        String sql = "select l_t.fecha from logs_torniquetes l_t, inputs i where i.entr_codigo=$1 and i.id=l_t.input_id and l_t.tipo='INGRESO' order by l_t.fecha DESC LIMIT 1";
+        sql = sql.replace("$1", codigo);
+        System.out.println("sql: " + sql);
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             if (rs.next()) {
                 return rs.getString("fecha");
-            }else{
+            } else {
                 return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public int consultarEstado(int id) {
+        int estado = -1;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT estado FROM torniquetes WHERE id = " + id);
+            if (rs.next()) {
+                estado = rs.getInt("estado");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return estado;
+    }
+
+    public int consultarReset(int id) {
+        int reset = -1;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT reset FROM torniquetes WHERE id = " + id);
+            if (rs.next()) {
+                reset = rs.getInt("reset");
+            }
+//            System.out.println("reset = " + id + " " + reset);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reset;
+    }
+
+    public void reset(int id, int reset) throws SQLException {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("UPDATE torniquetes SET reset = 0 WHERE id = " + id);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
