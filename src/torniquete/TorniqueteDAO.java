@@ -5,14 +5,9 @@
  */
 package torniquete;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Hashtable;
 
 public class TorniqueteDAO {
 
@@ -22,10 +17,39 @@ public class TorniqueteDAO {
         connection = Conexion.getConnection();
     }
 
+    public void desconectar() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            
+        }
+    }
+    
+    public void addContadorIn(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("UPDATE torniquetes SET centradas = centradas + 1 WHERE id = " + id);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void addContadorOut(int id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("UPDATE torniquetes SET cesalidas = cesalidas + 1 WHERE id = " + id);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void entrada(int id, String fecha) {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -35,6 +59,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -45,6 +70,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_minutos SET entradas = entradas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,6 +81,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_minutos SET salidas = salidas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,6 +91,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,6 +101,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,6 +112,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_horas SET entradas = entradas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,6 +123,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_horas SET salidas = salidas + 1 WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,6 +133,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -111,6 +143,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,6 +153,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_dias SET entradas = entradas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -129,6 +163,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_dias SET salidas = salidas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -138,6 +173,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -147,6 +183,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -156,6 +193,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_meses SET entradas = entradas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -165,6 +203,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_meses SET salidas = salidas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -174,6 +213,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_anos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -183,6 +223,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_anos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -192,6 +233,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_anos SET entradas = entradas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -201,6 +243,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_anos SET salidas = salidas + 1 WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -210,6 +253,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias_parques(fecha, entradas, salidas) VALUE ('" + fecha + "',1,0)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -219,6 +263,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("INSERT INTO entradas_salidas_dias_parques(fecha, entradas, salidas) VALUE ('" + fecha + "',0,1)");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -228,6 +273,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_dias_parques SET entradas = entradas + 1 WHERE fecha = '" + fecha + "'");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -237,6 +283,7 @@ public class TorniqueteDAO {
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE entradas_salidas_dias_parques SET salidas = salidas + 1 WHERE fecha = '" + fecha + "'");
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -264,8 +311,8 @@ public class TorniqueteDAO {
                     retornar = 1;
                 }
                 rs.close();
-//                registrarLog(retornar, torniquete_id, "-1",statement);
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -292,7 +339,6 @@ public class TorniqueteDAO {
             fecha = GUI2.Fecha.substring(0, GUI2.Fecha.length() - 2);
         }
         String sql = "SELECT id FROM entradas_salidas_minutos WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id;
-//      Hashtable<String, String> datos = new Hashtable<String, String>();
         boolean retornar = false;
         try {
             Statement statement = connection.createStatement();
@@ -303,6 +349,7 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -335,6 +382,7 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -365,6 +413,7 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -384,7 +433,6 @@ public class TorniqueteDAO {
         SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM");
         String fecha = Formateador.format(fecaActual);
         String sql = "SELECT id FROM entradas_salidas_meses WHERE fecha = '" + fecha + "' AND torniquete_id = " + id;
-//      Hashtable<String, String> datos = new Hashtable<String, String>();
         boolean retornar = false;
         try {
             Statement statement = connection.createStatement();
@@ -395,6 +443,7 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -425,6 +474,7 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -455,163 +505,11 @@ public class TorniqueteDAO {
                 }
                 rs.close();
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return retornar;
-    }
-
-    /**
-     * Determina la cantidada de ingresos se han realizado con una tarjeta en
-     * especifico
-     *
-     * @param input_id Id de la entrada que tiene asociada la tarjeta
-     * @return Cantidad de ingresos
-     */
-    public int cantidadIngresos(String input_id, Statement statement) {
-        int retornar = -1;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        System.out.println("Fecha Sistema: " + dateFormat.format(date));
-        String sql = "select SUM(ingresos) as cantidad from entradas_inputs where  input_id=" + input_id + " and fecha='" + dateFormat.format(date) + "'";
-        System.out.println("Sql: " + sql);
-        try {
-            ResultSet rs = statement.executeQuery(sql);
-            if (rs != null) {
-                //Si ya hay un registro en la base de datos, tomo los ingresos y valido si no ha excedido el limite
-                if (rs.next()) {
-                    retornar = rs.getInt("cantidad");
-                }
-
-            } else {
-                //Si no hay un registro lo ingreso a la base de datos
-                retornar = 0;
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-
-        return retornar;
-    }
-
-    /**
-     * Registra el ingreso en el sistema
-     *
-     * @param input_id Id del input que tiene asociada la tarjeta
-     * @param entrada_id Id del torniquete por donde se ingresa
-     * @param ingresos Cantidad de ingresos que ha reali
-     * @param statement
-     * @return
-     */
-    public int registrarIngresos(String input_id, String entrada_id, int ingresos, Statement statement) {
-        int retornar = -1;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        String sql = "";
-        if (ingresos > 0) {
-            sql = "update entradas_inputs set ingresos=" + (ingresos + 1) + " where entrada_id=" + entrada_id + " and input_id=" + input_id;
-        } else {
-            sql = "insert into entradas_inputs (entrada_id,input_id,fecha,ingresos) values(" + entrada_id + "," + input_id + ",'" + dateFormat.format(date) + "',1)";
-        }
-        try {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-
-        return retornar;
-    }
-
-    /**
-     * Determina la cantidad de ingresos maximo permitidos a una categoria
-     * especifica en la fecha actual
-     *
-     * @param category_id Id de la categoria a consultar
-     * @return La cantidad de ingresos maximos
-     */
-    public int getCantidadIngresosByValidation(String category_id, Statement statement) {
-        int retornar = -1;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        System.out.println("Fecha Sistema: " + dateFormat.format(date));
-        String sql = "select cantidad_reingresos from validations where ('" + dateFormat.format(date) + "' BETWEEN fechainicio and fechafin) and categoria_id=" + category_id;
-//        System.out.println("sql: "+sql);
-        try {
-            ResultSet rs = statement.executeQuery(sql);
-            if (rs != null) {
-                if (rs.next()) {
-                    //Si ya hay un registro en la base de datos, tomo los ingresos y valido si no ha excedido el limite
-                    retornar = rs.getInt("cantidad_reingresos");
-                }
-
-            } else {
-                //Si no hay un registro lo ingreso a la base de datos
-                retornar = -2;
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            retornar = -1;
-        }
-        return retornar;
-    }
-
-    public void registrarLog(int tipo, String torniquete_id, String input_id, Statement statement) {
-        String descripcion = "";
-        String type = "";
-        switch (tipo) {
-            case -4:
-                descripcion = "Tarjeta no pertenece al evento";
-                type = "RECHAZO";
-                break;
-            case -3:
-                descripcion = "La tarjeta no se encuentra en el sistema";
-                type = "RECHAZO";
-                break;
-            case -2:
-                descripcion = "Entrada no permite esa tarjeta";
-                type = "RECHAZO";
-                break;
-            case -1:
-                descripcion = "Se excedio el limite de entradas";
-                type = "RECHAZO";
-                break;
-            case 0:
-                descripcion = "";
-                type = "INGRESO";
-                break;
-        }
-        String sql = "insert into logs_torniquetes (torniquete_id, input_id, tipo, descripcion) values($1,$2,'$3','$4')";
-        sql = sql.replace("$1", torniquete_id);
-        sql = sql.replace("$2", input_id);
-        sql = sql.replace("$3", type);
-        sql = sql.replace("$4", descripcion);
-        try {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String obtenerUltimoIngreso(String codigo) {
-        String sql = "select l_t.fecha from logs_torniquetes l_t, inputs i where i.entr_codigo=$1 and i.id=l_t.input_id and l_t.tipo='INGRESO' order by l_t.fecha DESC LIMIT 1";
-        sql = sql.replace("$1", codigo);
-        System.out.println("sql: " + sql);
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-            if (rs.next()) {
-                return rs.getString("fecha");
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public int consultarEstado(int id) {
@@ -622,9 +520,12 @@ public class TorniqueteDAO {
             if (rs.next()) {
                 estado = rs.getInt("estado");
             }
+            rs.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("estado " + estado);
         return estado;
     }
 
@@ -636,19 +537,114 @@ public class TorniqueteDAO {
             if (rs.next()) {
                 reset = rs.getInt("reset");
             }
-//            System.out.println("reset = " + id + " " + reset);
+            rs.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("reset " + reset);
         return reset;
     }
 
-    public void reset(int id, int reset) throws SQLException {
+    public void actualizarEstado(int id, int estado) throws SQLException {
         try {
             Statement statement = connection.createStatement();
-            statement.execute("UPDATE torniquetes SET reset = 0 WHERE id = " + id);
+            statement.execute("UPDATE torniquetes SET estado = " + estado + " WHERE id = " + id);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
+    public void reset(int id) throws SQLException {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("UPDATE torniquetes SET reset = 0 WHERE id = " + id);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+//    public void actualizarInOut(int inputs, int outputs, int id, String fecha) throws SQLException {
+//        int entradas = 0;
+//        int salidas = 0;
+//        try {
+//            Statement statement = connection.createStatement();
+//            ResultSet rs = statement.executeQuery("SELECT centradas, csalidas FROM torniquetes WHERE id = " + id);
+//            if (rs.next()) {
+//                entradas = rs.getInt("centradas");
+//                salidas = rs.getInt("csalidas");
+//            }
+//            rs.close();
+//            statement.close();
+//            boolean verif = registrarActualizar(id);
+//            boolean verifHora = registrarActualizarHora(id);
+//            boolean verifDia = registrarActualizarDia(id);
+//            boolean verifMes = registrarActualizarMes(id);
+//            boolean verifAnio = registrarActualizarAnio(id);
+//            boolean verifTodosDia = registrarActualizarTodosDia();
+//            if (entradas < inputs) {
+//                statement = connection.createStatement();
+//                statement.execute("UPDATE torniquetes SET centradas = " + inputs + " WHERE id = " + id);
+//                statement.close();
+//                int in = inputs - entradas;
+//                if (verif) {
+//                    statement = connection.createStatement();
+//                    statement.execute("UPDATE entradas_salidas_minutos SET entradas = entradas + " + in + " WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+//                    statement.close();
+//                } else {
+//                    statement = connection.createStatement();
+//                    statement.execute("INSERT INTO entradas_salidas_minutos(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "'," + in + ",0)");
+//                    statement.close();
+//                }
+//                if (verifHora) {
+//                    fecha = fecha.substring(0, fecha.length() - 2);
+//                    statement = connection.createStatement();
+//                    statement.execute("UPDATE entradas_salidas_horas SET entradas = entradas + " + in + " WHERE fecha LIKE '" + fecha + "%' AND torniquete_id = " + id);
+//                    statement.close();
+//                } else {
+//                    statement = connection.createStatement();
+//                    statement.execute("INSERT INTO entradas_salidas_horas(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "'," + in + ",0)");
+//                    statement.close();
+//                }
+//                if (verifDia) {
+//                    statement = connection.createStatement();
+//                    statement.execute("UPDATE entradas_salidas_dias SET entradas = entradas + " + in + " WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+//                    statement.close();
+//                } else {
+//                    statement = connection.createStatement();
+//                    statement.execute("INSERT INTO entradas_salidas_dias(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "'," + in + ",0)");
+//                    statement.close();
+//                }
+//                if (verifMes) {
+//                    statement = connection.createStatement();
+//                    statement.execute("UPDATE entradas_salidas_meses SET entradas = entradas + " + in + " WHERE fecha = '" + fecha + "' AND torniquete_id = " + id);
+//                    statement.close();
+//                } else {
+//                    statement = connection.createStatement();
+//                    statement.execute("INSERT INTO entradas_salidas_meses(torniquete_id, fecha, entradas, salidas) VALUE (" + id + ",'" + fecha + "'," + in + ",0)");
+//                    statement.close();
+//                }
+//                if (verifAnio) {
+//                    dao.contarEntradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+//                } else {
+//                    dao.entradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
+//                }
+//                if (verifTodosDia) {
+//                    dao.contarEntradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+//                } else {
+//                    dao.entradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
+//                }
+//            }
+//            if (salidas != outputs) {
+//                statement = connection.createStatement();
+//                statement.execute("UPDATE torniquetes SET csalidas = " + outputs + " WHERE id = " + id);
+//            }
+//            statement.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    
 }

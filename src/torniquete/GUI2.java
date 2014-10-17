@@ -7,38 +7,31 @@ package torniquete;
 
 /**
  *
- * @author Developer
+ * @author Enovasoft
  */
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+//import java.io.*;
+//import java.net.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUI2 extends javax.swing.JFrame {
 
     /**
      * Creates new form GUI2
      */
-    //Communicator object
     static int estado = 0;
-    int torniquete_id = 1;
+    static int torniquete_id = 16;
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
     Communicator communicator = null;
     KeybindingController keybindingController = null;
-    ServerSocket serverAddr = null;
-    Socket sc = null;
+//    ServerSocket serverAddr = null;
+//    Socket sc = null;
 
     public GUI2() {        
         initComponents();
@@ -50,47 +43,46 @@ public class GUI2 extends javax.swing.JFrame {
         if (connection != null) {
             System.out.print(connection);
         }
-        //temporizador();
     }
     
     private void createObjects() {
         communicator = new Communicator(this);
         keybindingController = new KeybindingController(this);
     }
-
-    public void Escuchar() {
-        try {
-            serverAddr = new ServerSocket(2500);
-        } catch (Exception e) {
-            System.err.println("Error creando socket");
-        }
-        while (true) {
-            try {
-                sc = serverAddr.accept(); // esperando conexión
-                InputStream istream = sc.getInputStream();
-                ObjectInput in = new ObjectInputStream(istream);
-                int Estado = (int) in.readObject();
-                Thread.sleep(2000);
-                DataOutputStream ostream = new DataOutputStream(sc.getOutputStream());
-                if (Estado != -1) {
-                    communicator.bloqueaDesbloquea(Estado);
-                    if (estado == 0) {
-                        estado = 1;
-                        jLabel1.setText("Torniquete desbloqueado");
-                    } else {
-                        estado = 0;
-                        jLabel1.setText("Torniquete bloqueado");
-                    }
-                }
-                ostream.writeInt(estado);
-                ostream.flush();
-                sc.close();
-            } catch (Exception e) {
-                System.err.println("excepcion " + e.toString());
-                e.printStackTrace();
-            } // try
-        } // while
-    }
+    
+    //    public void Escuchar() {
+//        try {
+//            serverAddr = new ServerSocket(2500);
+//        } catch (Exception e) {
+//            System.err.println("Error creando socket");
+//        }
+//        while (true) {
+//            try {
+//                sc = serverAddr.accept(); // esperando conexión
+//                InputStream istream = sc.getInputStream();
+//                ObjectInput in = new ObjectInputStream(istream);
+//                int Estado = (int) in.readObject();
+//                Thread.sleep(2000);
+//                DataOutputStream ostream = new DataOutputStream(sc.getOutputStream());
+//                if (Estado != -1) {
+//                    communicator.bloqueaDesbloquea(Estado);
+//                    if (estado == 0) {
+//                        estado = 1;
+//                        jLabel1.setText("Torniquete desbloqueado");
+//                    } else {
+//                        estado = 0;
+//                        jLabel1.setText("Torniquete bloqueado");
+//                    }
+//                }
+//                ostream.writeInt(estado);
+//                ostream.flush();
+//                sc.close();
+//            } catch (Exception e) {
+//                System.err.println("excepcion " + e.toString());
+//                e.printStackTrace();
+//            } // try
+//        } // while
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -119,13 +111,6 @@ public class GUI2 extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bienvenido");
 
-        txtCodigo.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                txtCodigoInputMethodTextChanged(evt);
-            }
-        });
         txtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCodigoKeyPressed(evt);
@@ -187,41 +172,42 @@ public class GUI2 extends javax.swing.JFrame {
         //Tomo el texto y determino el tamaño
         String codigo = txtCodigo.getText();
 
-        if (codigo.length() == 10) {
+        if (codigo.length() == 8) {
             //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
-            TorniqueteDAO dao = new TorniqueteDAO();
-            int resultado = dao.validarTarjeta(codigo); //,torniquete_id
-            switch (resultado) {
-                case 0:
-                    communicator.bloqueaDesbloquea(estado);
-                    if (estado == 0) {
-                        estado = 1;
-                        jLabel1.setText("Torniquete desbloqueado");
-                    } else {
-                        estado = 0;
-                        jLabel1.setText("Torniquete bloqueado");
-                    }
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                    break;
-                case 1:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                    jLabel1.setText("No existe la tarjeta");
-                    break;
-                case -1:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
-                    jLabel1.setText("Error al ejecutar la consulta");
-                    break;
+            int resultado = -1;
+            try {
+                TorniqueteDAO dao = new TorniqueteDAO();
+                resultado = dao.validarTarjeta(codigo);
+                switch (resultado) {
+                    case 0:
+                        communicator.bloqueaDesbloquea(estado);
+                        dao.actualizarEstado(torniquete_id, estado);
+                        if (estado == 0) {
+                            estado = 1;
+                            jLabel1.setText("Torniquete desbloqueado");
+                        } else {
+                            estado = 0;
+                            jLabel1.setText("Torniquete bloqueado");
+                        }
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                        break;
+                    case 1:
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                        jLabel1.setText("No existe la tarjeta");
+                        break;
+                    case -1:
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
+                        jLabel1.setText("Error al ejecutar la consulta");
+                        break;
+                }
+                txtCodigo.setText(null);
+                txtCodigo.requestFocus();
+                dao.desconectar();
+            } catch (SQLException ex) {
+                Logger.getLogger(GUI2.class.getName()).log(Level.SEVERE, null, ex);
             }
-            txtCodigo.setText(null);
-            txtCodigo.requestFocus();
         }
-
     }//GEN-LAST:event_txtCodigoKeyPressed
-
-    private void txtCodigoInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtCodigoInputMethodTextChanged
-        // TODO add your handling code here:
-        System.out.println("Cambiando texto");
-    }//GEN-LAST:event_txtCodigoInputMethodTextChanged
 
     /**
      * @param args the command line arguments
@@ -252,13 +238,12 @@ public class GUI2 extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new GUI2().setVisible(true);
             }
         });
     }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     java.awt.Choice cboxPorts;
@@ -267,4 +252,5 @@ public class GUI2 extends javax.swing.JFrame {
     public javax.swing.JLabel lblLogo;
     public java.awt.TextField txtCodigo;
     // End of variables declaration//GEN-END:variables
+
 }

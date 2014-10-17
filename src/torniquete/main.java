@@ -6,20 +6,19 @@
 package torniquete;
 
 import java.awt.AWTException;
+import java.sql.SQLException;
 
 /**
- *
- * @author JorgeAndres
+ * @author Enovasoft
  */
 public class main {
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws AWTException {
+    public static void main(String[] args) throws AWTException, SQLException {
         // TODO code application logic here        
         GUI2 g = new GUI2();
-        TorniqueteDAO t = new TorniqueteDAO();
         g.setVisible(true);
         g.communicator.connect();
         if (g.communicator.getConnected() == true) {
@@ -27,10 +26,9 @@ public class main {
                 g.communicator.initListener();
                 g.cboxPorts.setVisible(false);
                 g.txtCodigo.requestFocus();
-                g.communicator.getcounter();
+//                g.communicator.getcounter();
                 g.communicator.temporizador();
             }
-
         }
     }
 

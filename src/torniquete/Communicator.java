@@ -6,22 +6,16 @@
 package torniquete;
 
 import gnu.io.*;
-import java.awt.Color;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.TooManyListenersException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Communicator implements SerialPortEventListener {
 
     //passed from main GUI
     GUI2 window = null;
-
-    TorniqueteDAO dao = new TorniqueteDAO();
 
     //for containing the ports that will be found
     private Enumeration ports = null;
@@ -37,6 +31,7 @@ public class Communicator implements SerialPortEventListener {
     private InputStream input = null;
     private OutputStream output = null;
 
+    String entrada = "";
     //just a boolean flag that i use for enabling
     //and disabling buttons depending on whether the program
     //is connected to a serial port or not
@@ -97,7 +92,6 @@ public class Communicator implements SerialPortEventListener {
         try {
             input = serialPort.getInputStream();
             output = serialPort.getOutputStream();
-            //getcounter();
             successful = true;
             return successful;
         } catch (IOException e) {
@@ -143,11 +137,10 @@ public class Communicator implements SerialPortEventListener {
         this.bConnected = bConnected;
     }
 
-    String entrada = "";
-
     //what happens when data is received
     //pre: serial event is triggered
     //post: processing on the data it reads
+    @Override
     public void serialEvent(SerialPortEvent evt) {
         if (evt.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
@@ -159,11 +152,9 @@ public class Communicator implements SerialPortEventListener {
                         finalizarLlegada();
                     }
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 logText = "Failed to read data. (" + e.toString() + ")";
             }
-        } else {
-//            finalizarLlegada();
         }
     }
 
@@ -178,12 +169,14 @@ public class Communicator implements SerialPortEventListener {
                 output.write(ascii);
             }
             output.flush();
-        } catch (Exception e) {
+        } catch (IOException e) {
             logText = "Failed to write data. (" + e.toString() + ")";
         }
     }
 
     private void finalizarLlegada() {
+        System.out.println("entrada " + entrada);
+        TorniqueteDAO dao = new TorniqueteDAO();
         boolean verif = dao.registrarActualizar(window.torniquete_id);
         boolean verifHora = dao.registrarActualizarHora(window.torniquete_id);
         boolean verifDia = dao.registrarActualizarDia(window.torniquete_id);
@@ -191,6 +184,7 @@ public class Communicator implements SerialPortEventListener {
         boolean verifAnio = dao.registrarActualizarAnio(window.torniquete_id);
         boolean verifTodosDia = dao.registrarActualizarTodosDia();
         if (entrada.indexOf("S011000000000E") != -1) {
+            dao.addContadorOut(window.torniquete_id);
             if (verif) {
                 dao.contarSalida(window.torniquete_id, GUI2.Fecha);
             } else {
@@ -222,6 +216,7 @@ public class Communicator implements SerialPortEventListener {
                 dao.salidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
             }
         } else if (entrada.indexOf("S010000000000E") != -1) {
+            dao.addContadorIn(window.torniquete_id);
             if (verif) {
                 dao.contarEntrada(window.torniquete_id, GUI2.Fecha);
             } else {
@@ -255,13 +250,15 @@ public class Communicator implements SerialPortEventListener {
         } else {
             System.out.println(entrada);
         }
-        entrada = "";
+        dao.desconectar();
     }
 
     public void resetearContador(int torniquete_id, int reset) {
+        TorniqueteDAO dao = new TorniqueteDAO();
         writeData(TIMEOUT, TIMEOUT, "S004000000E22");
         try {
-            dao.reset(torniquete_id, reset);
+            dao.reset(torniquete_id);
+            dao.desconectar();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -278,21 +275,21 @@ public class Communicator implements SerialPortEventListener {
         System.out.println("Enviado: " + mensaje);
     }
 
-    public void getcounter() {
-        String mensaje = "S006000000E20";
-        writeData(TIMEOUT, TIMEOUT, mensaje);
+//    public void getcounter() {
+//        TorniqueteDAO dao = new TorniqueteDAO();
+//        String mensaje = "S006000000E20";
+//        writeData(TIMEOUT, TIMEOUT, mensaje);
+//        int inputs = Integer.parseInt(mensaje.substring(13,18));
+//        int outputs = Integer.parseInt(mensaje.substring(19,24));
+//        try {
+//            dao.actualizarInOut(inputs, outputs, window.torniquete_id, GUI2.Fecha);
+//            dao.desconectar();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    }
-
-    private char calcularChecksum(String str, int nLength) {
-        char uRet = 0;
-        for (int i = 0; i < nLength; i++) {
-            uRet ^= (char) str.charAt(i);
-        }
-        return uRet;
-    }
-
-    public void temporizador() {
+    public void temporizador() throws SQLException {
         long start = System.currentTimeMillis();
         long aux = start;
         while (true) {
@@ -301,6 +298,7 @@ public class Communicator implements SerialPortEventListener {
             if (aux != end) {
                 aux = end;
                 if (res % 1000 == 0) {
+                    TorniqueteDAO dao = new TorniqueteDAO();
                     int estado = dao.consultarEstado(window.torniquete_id);
                     int reset = dao.consultarReset(window.torniquete_id);
                     if (estado == -1) {
@@ -320,7 +318,7 @@ public class Communicator implements SerialPortEventListener {
                     } else if (reset == 1) {
                         resetearContador(reset, window.torniquete_id);
                     }
-
+                    dao.desconectar();
                 }
             }
         }

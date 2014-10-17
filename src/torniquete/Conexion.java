@@ -10,45 +10,33 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Conexion
-{
-	static Connection conn;
+public class Conexion {
+    static Connection conn;
 
-	public static Connection getConnection()
-	{
-		
-		try
-		{
-//			String uname = "enovasoft";
-//			String pwd = "enovasoft";
-//			String servidor = "jdbc:mysql://192.168.0.23/aventura";
-			String uname = "root";
-			String pwd = "";
-			String servidor = "jdbc:mysql://localhost/aventura";
+    public static Connection getConnection() {
+        try {
+            String uname = "dpoveda";
+            String pwd = "millos2012";
+            String servidor = "jdbc:mysql://172.16.1.50/n_torniquetes";
+            
+//            String uname = "enovasoft";
+//            String pwd = "enovasoft";
+//            String servidor = "jdbc:mysql://172.16.1.50/aventura";
+			
+//            String uname = "root";
+//            String pwd = "";
+//            String servidor = "jdbc:mysql://localhost/aventura";
 
-//			String uname = "tiquetes";
-//			String pwd = "tiquetes2";
-//			String servidor = "jdbc:mysql://www.db4free.net/tiquetes";
-                        
-//			String uname = "totemgco_tiquet";
-//			String pwd = "glEok_1dpVZ%";
-//			String servidor = "jdbc:mysql://www.totemgroup.co/totemgco_tiquetes";
-
-			Class.forName("com.mysql.jdbc.Driver");
-			try
-			{
-				conn = DriverManager.getConnection(servidor,uname,pwd);
-			}
-			catch (SQLException ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-		catch(ClassNotFoundException e)
-		{
-			System.out.println(e);
-		}
-		return conn;
+            Class.forName("com.mysql.jdbc.Driver");
+            try	{
+                conn = DriverManager.getConnection(servidor,uname,pwd);
+            } catch (SQLException ex) {
+		ex.printStackTrace();
+            }
+	} catch(ClassNotFoundException e) {
+            System.out.println(e);
 	}
+	return conn;
+    }
 
 }
