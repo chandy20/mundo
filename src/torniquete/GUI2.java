@@ -24,7 +24,7 @@ public class GUI2 extends javax.swing.JFrame {
      * Creates new form GUI2
      */
     static int estado = 0;
-    static int torniquete_id = 16;
+    static int torniquete_id = 4;
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";

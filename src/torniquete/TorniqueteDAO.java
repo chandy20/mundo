@@ -38,7 +38,7 @@ public class TorniqueteDAO {
     public void addContadorOut(int id) {
         try {
             Statement statement = connection.createStatement();
-            statement.execute("UPDATE torniquetes SET cesalidas = cesalidas + 1 WHERE id = " + id);
+            statement.execute("UPDATE torniquetes SET csalidas = csalidas + 1 WHERE id = " + id);
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -559,7 +559,7 @@ public class TorniqueteDAO {
     public void reset(int id) throws SQLException {
         try {
             Statement statement = connection.createStatement();
-            statement.execute("UPDATE torniquetes SET reset = 0 WHERE id = " + id);
+            statement.execute("UPDATE torniquetes SET reset = 0, centradas = 0, csalidas = 0 WHERE id = " + id);
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();

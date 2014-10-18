@@ -316,7 +316,7 @@ public class Communicator implements SerialPortEventListener {
                     if (reset == -1) {
                         System.out.println("Error en la consulta del reset");
                     } else if (reset == 1) {
-                        resetearContador(reset, window.torniquete_id);
+                        resetearContador(window.torniquete_id, reset);
                     }
                     dao.desconectar();
                 }
