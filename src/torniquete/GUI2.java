@@ -24,7 +24,7 @@ public class GUI2 extends javax.swing.JFrame {
      * Creates new form GUI2
      */
     static int estado = 0;
-    static int torniquete_id = 4;
+    static int torniquete_id = 16;
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
@@ -33,7 +33,7 @@ public class GUI2 extends javax.swing.JFrame {
 //    ServerSocket serverAddr = null;
 //    Socket sc = null;
 
-    public GUI2() {        
+    public GUI2() {
         initComponents();
         createObjects();
         communicator.searchForPorts();
@@ -44,12 +44,12 @@ public class GUI2 extends javax.swing.JFrame {
             System.out.print(connection);
         }
     }
-    
+
     private void createObjects() {
         communicator = new Communicator(this);
         keybindingController = new KeybindingController(this);
     }
-    
+
     //    public void Escuchar() {
 //        try {
 //            serverAddr = new ServerSocket(2500);
@@ -83,7 +83,7 @@ public class GUI2 extends javax.swing.JFrame {
 //            } // try
 //        } // while
 //    }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,9 +111,9 @@ public class GUI2 extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bienvenido");
 
-        txtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtCodigoKeyPressed(evt);
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoActionPerformed(evt);
             }
         });
 
@@ -168,51 +168,50 @@ public class GUI2 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyPressed
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+        // TODO add your handling code here:
         //Tomo el texto y determino el tamaño
         String codigo = txtCodigo.getText();
-
-        if (codigo.length() == 8) {
-            //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
-            int resultado = -1;
-            try {
-                TorniqueteDAO dao = new TorniqueteDAO();
-                resultado = dao.validarTarjeta(codigo);
-                switch (resultado) {
-                    case 0:
-                        communicator.bloqueaDesbloquea(estado);
-                        dao.actualizarEstado(torniquete_id, estado);
-                        if (estado == 0) {
-                            estado = 1;
-                            jLabel1.setText("Torniquete desbloqueado");
-                        } else {
-                            estado = 0;
-                            jLabel1.setText("Torniquete bloqueado");
-                        }
-                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                        break;
-                    case 1:
-                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                        jLabel1.setText("No existe la tarjeta");
-                        break;
-                    case -1:
-                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
-                        jLabel1.setText("Error al ejecutar la consulta");
-                        break;
-                }
-                txtCodigo.setText(null);
-                txtCodigo.requestFocus();
-                dao.desconectar();
-            } catch (SQLException ex) {
-                Logger.getLogger(GUI2.class.getName()).log(Level.SEVERE, null, ex);
+        
+        //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
+        int resultado = -1;
+        try {
+            TorniqueteDAO dao = new TorniqueteDAO();
+            resultado = dao.validarTarjeta(codigo);
+            switch (resultado) {
+                case 0:
+                    communicator.bloqueaDesbloquea(estado);
+                    dao.actualizarEstado(torniquete_id, estado);
+                    if (estado == 0) {
+                        estado = 1;
+                        jLabel1.setText("Torniquete desbloqueado");
+                    } else {
+                        estado = 0;
+                        jLabel1.setText("Torniquete bloqueado");
+                    }
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                    break;
+                case 1:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                    jLabel1.setText("No existe la tarjeta");
+                    break;
+                case -1:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
+                    jLabel1.setText("Error al ejecutar la consulta");
+                    break;
             }
+            txtCodigo.setText(null);
+            txtCodigo.requestFocus();
+            dao.desconectar();
+        } catch (SQLException ex) {
+            Logger.getLogger(GUI2.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_txtCodigoKeyPressed
+    }//GEN-LAST:event_txtCodigoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+/**
+ * @param args the command line arguments
+ */
+public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -223,23 +222,39 @@ public class GUI2 extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                }
+                
+
+}
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI2.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(GUI2.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GUI2.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(GUI2.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run() {
+        public void run() {
                 new GUI2().setVisible(true);
             }
         });

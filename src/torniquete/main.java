@@ -26,7 +26,7 @@ public class main {
                 g.communicator.initListener();
                 g.cboxPorts.setVisible(false);
                 g.txtCodigo.requestFocus();
-//                g.communicator.getcounter();
+                g.communicator.getcounter();
                 g.communicator.temporizador();
             }
         }

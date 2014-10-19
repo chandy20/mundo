@@ -9,8 +9,6 @@ import gnu.io.*;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Communicator implements SerialPortEventListener {
 
@@ -148,8 +146,10 @@ public class Communicator implements SerialPortEventListener {
                 if (singleData != NEW_LINE_ASCII) {
                     logText = new String(new byte[]{singleData});
                     entrada += logText;
-                    if (logText.equals("E")) {
+                    if (entrada.indexOf("S011000000000E") != -1 || entrada.indexOf("S010000000000E") != -1) {
                         finalizarLlegada();
+                    } else {
+                        setearCuentas();
                     }
                 }
             } catch (IOException e) {
@@ -175,7 +175,6 @@ public class Communicator implements SerialPortEventListener {
     }
 
     private void finalizarLlegada() {
-        System.out.println("entrada " + entrada);
         TorniqueteDAO dao = new TorniqueteDAO();
         boolean verif = dao.registrarActualizar(window.torniquete_id);
         boolean verifHora = dao.registrarActualizarHora(window.torniquete_id);
@@ -247,9 +246,8 @@ public class Communicator implements SerialPortEventListener {
             } else {
                 dao.entradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
             }
-        } else {
-            System.out.println(entrada);
         }
+        entrada = "";
         dao.desconectar();
     }
 
@@ -275,19 +273,24 @@ public class Communicator implements SerialPortEventListener {
         System.out.println("Enviado: " + mensaje);
     }
 
-//    public void getcounter() {
-//        TorniqueteDAO dao = new TorniqueteDAO();
-//        String mensaje = "S006000000E20";
-//        writeData(TIMEOUT, TIMEOUT, mensaje);
-//        int inputs = Integer.parseInt(mensaje.substring(13,18));
-//        int outputs = Integer.parseInt(mensaje.substring(19,24));
+    public void getcounter() {
+        String mensaje = "S006000000E20";
+        writeData(TIMEOUT, TIMEOUT, mensaje);
+    }
+    
+    public void setearCuentas() {
+        TorniqueteDAO dao = new TorniqueteDAO();
+        int inputs = Integer.parseInt(entrada.substring(13,19));
+        int outputs = Integer.parseInt(entrada.substring(20,25));
+        System.out.println("Entradas -> " + inputs + " Salidas -> " + outputs);
 //        try {
 //            dao.actualizarInOut(inputs, outputs, window.torniquete_id, GUI2.Fecha);
 //            dao.desconectar();
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
+        entrada = "";
+    }
 
     public void temporizador() throws SQLException {
         long start = System.currentTimeMillis();

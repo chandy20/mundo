@@ -298,8 +298,8 @@ public class TorniqueteDAO {
      * encuentra en el sistema -1 si hay un error en la consulta
      */
     public int validarTarjeta(String codigo) { //, String torniquete_id
-        String sql = "SELECT id FROM bracelets WHERE cod_barras = " + codigo;
-//      Hashtable<String, String> datos = new Hashtable<String, String>();
+        System.out.println("code " + codigo);
+        String sql = "SELECT id FROM bracelets WHERE cod_barras = '" + codigo +"'";
         int retornar = -1;
         try {
             Statement statement = connection.createStatement();
@@ -310,6 +310,7 @@ public class TorniqueteDAO {
                 } else {
                     retornar = 1;
                 }
+                System.out.println("rte " + rs.getInt("id"));
                 rs.close();
             }
             statement.close();
@@ -525,7 +526,6 @@ public class TorniqueteDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("estado " + estado);
         return estado;
     }
 
@@ -542,7 +542,6 @@ public class TorniqueteDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("reset " + reset);
         return reset;
     }
 
