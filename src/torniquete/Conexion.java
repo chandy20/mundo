@@ -21,7 +21,7 @@ public class Conexion {
             
             String uname = "enovasoft";
             String pwd = "enovasoft";
-            String servidor = "jdbc:mysql://172.16.1.5/aventura";
+            String servidor = "jdbc:mysql://172.16.1.50/aventura";
 			
 //            String uname = "root";
 //            String pwd = "";

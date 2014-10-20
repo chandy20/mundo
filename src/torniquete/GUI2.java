@@ -174,10 +174,9 @@ public class GUI2 extends javax.swing.JFrame {
         String codigo = txtCodigo.getText();
         
         //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
-        int resultado = -1;
         try {
             TorniqueteDAO dao = new TorniqueteDAO();
-            resultado = dao.validarTarjeta(codigo);
+            int resultado = dao.validarTarjeta(codigo);
             switch (resultado) {
                 case 0:
                     communicator.bloqueaDesbloquea(estado);
@@ -204,7 +203,7 @@ public class GUI2 extends javax.swing.JFrame {
             txtCodigo.requestFocus();
             dao.desconectar();
         } catch (SQLException ex) {
-            Logger.getLogger(GUI2.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_txtCodigoActionPerformed
 
@@ -222,33 +221,12 @@ public static void main(String args[]) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                
-
-}
+                }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } 
 
-catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } 
-
-catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } 
-
-catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI2.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
         //</editor-fold>
 
         /* Create and display the form */

@@ -19,7 +19,7 @@ public class Communicator implements SerialPortEventListener {
     private Enumeration ports = null;
 
     //map the port names to CommPortIdentifiers
-    private HashMap portMap = new HashMap();
+    private final HashMap portMap = new HashMap();
 
     //this is the object that contains the opened port
     private CommPortIdentifier selectedPortIdentifier = null;
@@ -122,7 +122,7 @@ public class Communicator implements SerialPortEventListener {
             setConnected(false);
             window.keybindingController.toggleControls();
             logText = "Disconnected.";
-        } catch (Exception e) {
+        } catch (IOException e) {
             logText = "Failed to close " + serialPort.getName() + "(" + e.toString() + ")";
         }
     }
@@ -146,11 +146,10 @@ public class Communicator implements SerialPortEventListener {
                 if (singleData != NEW_LINE_ASCII) {
                     logText = new String(new byte[]{singleData});
                     entrada += logText;
-                    if (entrada.indexOf("S011000000000E") != -1 || entrada.indexOf("S010000000000E") != -1) {
-                        finalizarLlegada();
-                    } else {
+                    if (entrada.indexOf("S011000000000E") != -1 || entrada.indexOf("S010000000000E") != -1)
+                        finalizarLlegada(1,1);
+                    else if (entrada.indexOf("S006") != -1 && entrada.length() >= 28)
                         setearCuentas();
-                    }
                 }
             } catch (IOException e) {
                 logText = "Failed to read data. (" + e.toString() + ")";
@@ -174,79 +173,49 @@ public class Communicator implements SerialPortEventListener {
         }
     }
 
-    private void finalizarLlegada() {
+    private void finalizarLlegada(int input, int output) {
         TorniqueteDAO dao = new TorniqueteDAO();
-        boolean verif = dao.registrarActualizar(window.torniquete_id);
-        boolean verifHora = dao.registrarActualizarHora(window.torniquete_id);
-        boolean verifDia = dao.registrarActualizarDia(window.torniquete_id);
-        boolean verifMes = dao.registrarActualizarMes(window.torniquete_id);
-        boolean verifAnio = dao.registrarActualizarAnio(window.torniquete_id);
+        boolean verif = dao.registrarActualizar(GUI2.torniquete_id);
+        boolean verifHora = dao.registrarActualizarHora(GUI2.torniquete_id);
+        boolean verifDia = dao.registrarActualizarDia(GUI2.torniquete_id);
+        boolean verifMes = dao.registrarActualizarMes(GUI2.torniquete_id);
+        boolean verifAnio = dao.registrarActualizarAnio(GUI2.torniquete_id);
         boolean verifTodosDia = dao.registrarActualizarTodosDia();
-        if (entrada.indexOf("S011000000000E") != -1) {
-            dao.addContadorOut(window.torniquete_id);
-            if (verif) {
-                dao.contarSalida(window.torniquete_id, GUI2.Fecha);
-            } else {
-                dao.salida(window.torniquete_id, GUI2.Fecha);
-            }
-            if (verifHora) {
-                dao.contarSalidaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
-            } else {
-                dao.salidaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
-            }
-            if (verifDia) {
-                dao.contarSalidaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            } else {
-                dao.salidaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            }
-            if (verifMes) {
-                dao.contarSalidaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
-            } else {
-                dao.salidaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
-            }
-            if (verifAnio) {
-                dao.contarSalidaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
-            } else {
-                dao.salidaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
-            }
-            if (verifTodosDia) {
-                dao.contarSalidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            } else {
-                dao.salidaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            }
-        } else if (entrada.indexOf("S010000000000E") != -1) {
-            dao.addContadorIn(window.torniquete_id);
-            if (verif) {
-                dao.contarEntrada(window.torniquete_id, GUI2.Fecha);
-            } else {
-                dao.entrada(window.torniquete_id, GUI2.Fecha);
-            }
-            if (verifHora) {
-                dao.contarEntradaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
-            } else {
-                dao.entradaHora(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00");
-            }
-            if (verifDia) {
-                dao.contarEntradaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            } else {
-                dao.entradaDia(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            }
-            if (verifMes) {
-                dao.contarEntradaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
-            } else {
-                dao.entradaMes(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12));
-            }
-            if (verifAnio) {
-                dao.contarEntradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
-            } else {
-                dao.entradaAnio(window.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15));
-            }
-            if (verifTodosDia) {
-                dao.contarEntradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            } else {
-                dao.entradaTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9));
-            }
+        int entradaRegistrar = 0;
+        int salidaRegistrar = 0;
+        if (entrada.indexOf("S011000000000E") != -1)
+            salidaRegistrar = 1;
+        else if (entrada.indexOf("S010000000000E") != -1)
+            entradaRegistrar = 1;
+        else if (entrada.indexOf("S006") != -1) {
+            entradaRegistrar = input;
+            salidaRegistrar = output;
         }
+        dao.addContador(GUI2.torniquete_id, entradaRegistrar, salidaRegistrar);
+        if (verif)
+            dao.contar(GUI2.torniquete_id, GUI2.Fecha, entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOut(GUI2.torniquete_id, GUI2.Fecha, entradaRegistrar, salidaRegistrar);
+        if (verifHora)
+            dao.contarHora(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00", entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOutHora(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 5) + "00", entradaRegistrar, salidaRegistrar);
+        if (verifDia)
+            dao.contarDia(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9), entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOutDia(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9), entradaRegistrar, salidaRegistrar);
+        if (verifMes)
+            dao.contarMes(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12), entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOutMes(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 12), entradaRegistrar, salidaRegistrar);
+        if (verifAnio)
+            dao.contarAnio(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15), entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOutAnio(GUI2.torniquete_id, GUI2.Fecha.substring(0, GUI2.Fecha.length() - 15), entradaRegistrar, salidaRegistrar);
+        if (verifTodosDia)
+            dao.contarTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9), entradaRegistrar, salidaRegistrar);
+        else
+            dao.inOutTodosDias(GUI2.Fecha.substring(0, GUI2.Fecha.length() - 9), entradaRegistrar, salidaRegistrar);
         entrada = "";
         dao.desconectar();
     }
@@ -279,20 +248,30 @@ public class Communicator implements SerialPortEventListener {
     }
     
     public void setearCuentas() {
-        TorniqueteDAO dao = new TorniqueteDAO();
-        int inputs = Integer.parseInt(entrada.substring(13,19));
-        int outputs = Integer.parseInt(entrada.substring(20,25));
-        System.out.println("Entradas -> " + inputs + " Salidas -> " + outputs);
-//        try {
-//            dao.actualizarInOut(inputs, outputs, window.torniquete_id, GUI2.Fecha);
-//            dao.desconectar();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        if (entrada.indexOf("S006000") != -1) {
+            TorniqueteDAO dao = new TorniqueteDAO();
+            int inputs = Integer.parseInt(entrada.substring(13, 19));
+            int outputs = Integer.parseInt(entrada.substring(19, 25));
+            try {
+                ArrayList cantidades = dao.consultarInOut(GUI2.torniquete_id);
+                if (cantidades != null) {
+                    int entradas = inputs - (Integer) cantidades.get(0);
+                    int salidas = outputs - (Integer) cantidades.get(1);
+                    if (entradas != 0 || salidas != 0) {
+                        finalizarLlegada(entradas, salidas);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            dao.desconectar();
+        } else 
+            System.out.println("Contador de troniquete averiado");
         entrada = "";
     }
 
     public void temporizador() throws SQLException {
+        System.out.println("1");
         long start = System.currentTimeMillis();
         long aux = start;
         while (true) {
@@ -302,24 +281,25 @@ public class Communicator implements SerialPortEventListener {
                 aux = end;
                 if (res % 1000 == 0) {
                     TorniqueteDAO dao = new TorniqueteDAO();
-                    int estado = dao.consultarEstado(window.torniquete_id);
-                    int reset = dao.consultarReset(window.torniquete_id);
+                    int estado = dao.consultarEstado(GUI2.torniquete_id);
+                    int reset = dao.consultarReset(GUI2.torniquete_id);
                     if (estado == -1) {
                         System.out.println("Error en la consulta del estado");
-                    } else if (estado == window.estado) {
-                        if (window.estado == 0) {
-                            window.estado = 1;
-                            window.jLabel1.setText("Torniquete desbloqueado");
-                        } else {
-                            window.estado = 0;
+                    } else if (GUI2.estado != estado) {
+                        if (estado == 0) {
+                            GUI2.estado = 0;
                             window.jLabel1.setText("Torniquete bloqueado");
+                            bloqueaDesbloquea(1);
+                        } else {
+                            GUI2.estado = 1;
+                            window.jLabel1.setText("Torniquete desbloqueado");
+                            bloqueaDesbloquea(0);
                         }
-                        bloqueaDesbloquea(estado);
                     }
                     if (reset == -1) {
                         System.out.println("Error en la consulta del reset");
                     } else if (reset == 1) {
-                        resetearContador(window.torniquete_id, reset);
+                        resetearContador(GUI2.torniquete_id, reset);
                     }
                     dao.desconectar();
                 }
