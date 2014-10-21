@@ -415,6 +415,10 @@ public class TorniqueteDAO {
     }
 
     public void actualizarEstado(int id, int estado) throws SQLException {
+        if (estado == 0)
+            estado = 1;
+        else
+            estado = 0;
         try {
             Statement statement = connection.createStatement();
             statement.execute("UPDATE torniquetes SET estado = " + estado + " WHERE id = " + id);
