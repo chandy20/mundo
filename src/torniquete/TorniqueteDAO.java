@@ -179,7 +179,6 @@ public class TorniqueteDAO {
                 } else {
                     retornar = 1;
                 }
-                System.out.println("rte " + rs.getInt("id"));
                 rs.close();
             }
             statement.close();

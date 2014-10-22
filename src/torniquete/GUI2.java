@@ -190,7 +190,7 @@ public class GUI2 extends javax.swing.JFrame {
                     break;
                 case 1:
                     communicator.desbloqueaEntrada();
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
                     jLabel1.setText("Desbloqueado para una entrada");
                     break;
                 case -1:
