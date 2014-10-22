@@ -189,8 +189,9 @@ public class GUI2 extends javax.swing.JFrame {
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
                     break;
                 case 1:
+                    communicator.desbloqueaEntrada();
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                    jLabel1.setText("No existe la tarjeta");
+                    jLabel1.setText("Desbloqueado para una entrada");
                     break;
                 case -1:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));

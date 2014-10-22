@@ -241,6 +241,11 @@ public class Communicator implements SerialPortEventListener {
         writeData(TIMEOUT, TIMEOUT, mensaje);
         System.out.println("Enviado: " + mensaje);
     }
+    
+    public void desbloqueaEntrada() {
+        String mensaje = "S009000000E2F";
+        writeData(TIMEOUT, TIMEOUT, mensaje);
+    }
 
     public void getcounter() {
         String mensaje = "S006000000E20";
