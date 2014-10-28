@@ -11,10 +11,15 @@ package torniquete;
  */
 //import java.io.*;
 //import java.net.*;
+import java.util.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUI2 extends javax.swing.JFrame {
 
@@ -26,6 +31,9 @@ public class GUI2 extends javax.swing.JFrame {
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
+    String lectura = "";
+    SimpleDateFormat Formateador2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String fecLectura = Formateador2.format(fecha);
     Communicator communicator = null;
     KeybindingController keybindingController = null;
 //    ServerSocket serverAddr = null;
@@ -82,7 +90,6 @@ public class GUI2 extends javax.swing.JFrame {
 //            } // try
 //        } // while
 //    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -195,46 +202,72 @@ public class GUI2 extends javax.swing.JFrame {
         // TODO add your handling code here:
         //Tomo el texto y determino el tamaño
         String codigo = txtCodigo.getText();
-        
-        //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
-        try {
-            TorniqueteDAO dao = new TorniqueteDAO();
-            int resultado = dao.validarTarjeta(codigo);
-            switch (resultado) {
-                case 0:
-                    communicator.bloqueaDesbloquea(estado);
-                    dao.actualizarEstado(torniquete_id, estado);
-                    if (estado == 0) {
-                        estado = 1;
-                        jLabel1.setText("Torniquete desbloqueado");
-                    } else {
-                        estado = 0;
-                        jLabel1.setText("Torniquete bloqueado");
-                    }
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                    break;
-                case 1:
-                    communicator.desbloqueaEntrada();
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                    jLabel1.setText("Desbloqueado para una entrada");
-                    break;
-                case -1:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
-                    jLabel1.setText("Error al ejecutar la consulta");
-                    break;
+        Date date = new Date();
+        String FecActual = Formateador2.format(date);
+        boolean Bandera = false;
+
+        if (codigo == lectura) {
+            Calendar calFechaInicial = Calendar.getInstance();
+            Calendar calFechaFinal = Calendar.getInstance();
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            try {
+                calFechaInicial.setTime(df.parse(fecLectura));
+                calFechaFinal.setTime(df.parse(FecActual));
+                long segundos = ((calFechaFinal.getTimeInMillis() - calFechaInicial.getTimeInMillis()) / 1000);
+                if (segundos > 5) {
+                    Bandera = true;
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(GUI2.class.getName()).log(Level.SEVERE, null, ex);
             }
-            txtCodigo.setText(null);
-            txtCodigo.requestFocus();
-            dao.desconectar();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } else {
+            Bandera = true;
+        }
+
+        //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
+        if (Bandera) {
+            lectura = codigo;
+            fecLectura = FecActual;
+            try {
+                TorniqueteDAO dao = new TorniqueteDAO();
+                int resultado = dao.validarTarjeta(codigo);
+
+                switch (resultado) {
+                    case 0:
+                        communicator.bloqueaDesbloquea(estado);
+                        dao.actualizarEstado(torniquete_id, estado);
+                        if (estado == 0) {
+                            estado = 1;
+                            jLabel1.setText("Torniquete desbloqueado");
+                        } else {
+                            estado = 0;
+                            jLabel1.setText("Torniquete bloqueado");
+                        }
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                        break;
+                    case 1:
+                        communicator.desbloqueaEntrada();
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                        jLabel1.setText("Desbloqueado para una entrada");
+                        break;
+                    case -1:
+                        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning.png")));
+                        jLabel1.setText("Error al ejecutar la consulta");
+                        break;
+                }
+                txtCodigo.setText(null);
+                txtCodigo.requestFocus();
+                dao.desconectar();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }//GEN-LAST:event_txtCodigoActionPerformed
 
-/**
- * @param args the command line arguments
- */
-public static void main(String args[]) {
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -249,14 +282,14 @@ public static void main(String args[]) {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        } 
+        }
 
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-        public void run() {
+            public void run() {
                 new GUI2().setVisible(true);
             }
         });
