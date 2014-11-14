@@ -27,7 +27,7 @@ public class GUI2 extends javax.swing.JFrame {
      * Creates new form GUI2
      */
     static int estado = 0;
-    static int torniquete_id = 5;
+    static int torniquete_id = 1;
     static Date fecha = new Date();
     static SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String Fecha = Formateador.format(fecha) + ":00";
@@ -209,8 +209,8 @@ public class GUI2 extends javax.swing.JFrame {
         Date date = new Date();
         String FecActual = Formateador2.format(date);
         boolean Bandera = false;
-
-        if (codigo == lectura) {
+        
+        if (codigo.equals(lectura)) {
             Calendar calFechaInicial = Calendar.getInstance();
             Calendar calFechaFinal = Calendar.getInstance();
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -259,13 +259,16 @@ public class GUI2 extends javax.swing.JFrame {
                         jLabel1.setText("Error al ejecutar la consulta");
                         break;
                 }
-                txtCodigo.setText(null);
-                txtCodigo.requestFocus();
                 dao.desconectar();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+        } else {
+            lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+            jLabel1.setText("Ya se leyó el código");
         }
+        txtCodigo.setText(null);
+        txtCodigo.requestFocus();
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     /**

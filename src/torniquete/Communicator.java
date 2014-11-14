@@ -146,10 +146,14 @@ public class Communicator implements SerialPortEventListener {
                 if (singleData != NEW_LINE_ASCII) {
                     logText = new String(new byte[]{singleData});
                     entrada += logText;
-                    if (entrada.indexOf("S011000000000E") != -1 || entrada.indexOf("S010000000000E") != -1)
-                        finalizarLlegada(1,1);
-                    else if (entrada.indexOf("S006") != -1 && entrada.length() >= 28)
-                        setearCuentas();
+                    if (entrada.indexOf("S011000000000E") != -1 || entrada.indexOf("S010000000000E") != -1) {
+                        entrada = "";
+//                        finalizarLlegada(1,1);                        
+                    }
+                    else if (entrada.indexOf("S006") != -1 && entrada.length() >= 28) {
+                        entrada = "";
+//                        setearCuentas();                        
+                    }
                 }
             } catch (IOException e) {
                 logText = "Failed to read data. (" + e.toString() + ")";
@@ -262,7 +266,8 @@ public class Communicator implements SerialPortEventListener {
                 if (cantidades != null) {
                     int entradas = inputs - (Integer) cantidades.get(0);
                     int salidas = outputs - (Integer) cantidades.get(1);
-                    if (entradas != 0 || salidas != 0) {
+                    if (entradas > 0 || salidas > 0) {
+                        System.out.println("Modificando contadores: in -> " + entradas + " out -> " + salidas);
                         finalizarLlegada(entradas, salidas);
                     }
                 }

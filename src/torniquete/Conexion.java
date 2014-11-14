@@ -15,13 +15,13 @@ public class Conexion {
 
     public static Connection getConnection() {
         try {
-//            String uname = "dpoveda";
-//            String pwd = "millos2012";
-//            String servidor = "jdbc:mysql://172.16.1.50/n_torniquetes";
+            String uname = "dpoveda";
+            String pwd = "millos2012";
+            String servidor = "jdbc:mysql://172.16.1.50/n_torniquetes";
             
-            String uname = "enovasoft";
-            String pwd = "enovasoft";
-            String servidor = "jdbc:mysql://172.16.1.50/aventura";
+//            String uname = "enovasoft";
+//            String pwd = "enovasoft";
+//            String servidor = "jdbc:mysql://172.16.1.50/aventura";
 			
 //            String uname = "root";
 //            String pwd = "";
